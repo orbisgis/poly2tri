@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <name>poly2tri</name>
+    <version>0.2-SNAPSHOT</version>
+    <artifactId>poly2tri</artifactId>
+    <groupId>org.orbisgis</groupId>
+    <packaging>jar</packaging>
+    <licenses>
+        <license>
+            <name>New BSD License</name>
+            <url>LICENSE.txt</url>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <id>obi</id>
+            <name>Thomas Åhlén</name>
+            <email>thahlen@gmail.com</email>
+        </developer>
+        <developer>
+            <id>nicolas-f</id>
+            <name>Nicolas Fortin</name>
+        </developer>
+        <developer>
+            <id>ebocher</id>
+            <name>Erwan Bocher</name>
+        </developer>
+    </developers>
+
+    <!-- Properties -->
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.build.timestamp.format>YYYY-MM-dd</maven.build.timestamp.format>
+        <buildNumber>${maven.build.timestamp}</buildNumber>
+        <maven.compiler.target>8</maven.compiler.target>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven-version>3.5.0</maven-version>
+        <java-version>1.8</java-version>
+
+        <!-- Dependencies versions -->
+        <slf4j-version>1.7.30</slf4j-version>
+        <junit-version>5.7.0-M1</junit-version>
+
+        <!-- Plugins versions -->
+        <exec-maven-version>3.0.0</exec-maven-version>
+        <maven-compiler-version>3.8.1</maven-compiler-version>
+        <maven-bundle-version>4.2.1</maven-bundle-version>
+        <maven-deploy-version>3.0.0-M1</maven-deploy-version>
+        <maven-install-version>3.0.0-M1</maven-install-version>
+        <maven-jar-version>3.2.0</maven-jar-version>
+        <maven-javadoc-version>3.2.0</maven-javadoc-version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>${slf4j-version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit-version}</version>
+        </dependency>
+    </dependencies>
+
+    <issueManagement>
+        <system>Github</system>
+        <url>https://github.com/orbisgis/poly2tri/issues</url>
+    </issueManagement>
+
+    <build>
+        <sourceDirectory>src/main/java</sourceDirectory>
+        <plugins>
+            <!--  http://maven.apache.org/plugins/maven-dependency-plugin/usage.html -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.8</version>
+                <executions>
+                    <!-- http://maven.apache.org/plugins/maven-dependency-plugin/unpack-dependencies-mojo.html -->
+                    <!-- unpack all 3dparty classes to one directory -->
+                    <execution>
+                        <id>unpack-dependencies-classes</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>unpack-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/lib/classes</outputDirectory>
+                            <type>jar</type>
+                        </configuration>
+                    </execution>
+                    <!-- unpack 3dparty sources to one directory -->
+                    <execution>
+                        <id>unpack-dependencies-sources</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>unpack-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <classifier>sources</classifier>
+                            <failOnMissingClassifierArtifact>false</failOnMissingClassifierArtifact>
+                            <outputDirectory>${project.build.directory}/lib/sources</outputDirectory>
+                            <silent>true</silent>
+                            <type>jar</type>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!--  http://maven.apache.org/plugins/maven-javadoc-plugin/ -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${maven-javadoc-version}</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadoc</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>${maven-bundle-version}</version>
+                <extensions>true</extensions>
+                <executions>
+                    <execution>
+                        <id>bundle-manifest</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>manifest</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <!-- include extra manifest entries -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>${maven-jar-version}</version>
+                <configuration>
+                    <archive>
+                        <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-version}</version>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
