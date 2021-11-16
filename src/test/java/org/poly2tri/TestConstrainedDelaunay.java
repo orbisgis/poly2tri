@@ -1,0 +1,171 @@
+package org.poly2tri;
+
+import org.poly2tri.geometry.polygon.Polygon;
+import org.poly2tri.geometry.polygon.PolygonPoint;
+import org.poly2tri.geometry.primitives.Point;
+import org.poly2tri.triangulation.TriangulationPoint;
+import org.poly2tri.triangulation.delaunay.DelaunayTriangle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.*;
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
+import java.util.concurrent.atomic.AtomicBoolean;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
+
+/**
+ * Test constrained mesh generation
+ * @author Nicolas Fortin, CNRS 2488
+ */
+public class TestConstrainedDelaunay {
+    private static final Logger LOGGER = LoggerFactory.getLogger(TestConstrainedDelaunay.class);
+
+    private static PolygonPoint mkPt(double x, double y) {
+        return new PolygonPoint(x, y);
+    }
+    private static PolygonPoint mkPt(double x, double y, double z) {
+        return new PolygonPoint(x, y, z);
+    }
+
+    private static void pointsFromFile(URL dataUrl, MathContext mathContext, List<PolygonPoint> outerRing, List<ArrayList<PolygonPoint>> holes) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(dataUrl.getFile()));
+        List<PolygonPoint> polygonPointList = outerRing;
+        try {
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                if(line.isEmpty()) {
+                    ArrayList<PolygonPoint> hole = new ArrayList<PolygonPoint>();
+                    holes.add(hole);
+                    polygonPointList = hole;
+                } else {
+                    StringTokenizer stringTokenizer = new StringTokenizer(line, " ");
+                    double x = new BigDecimal(stringTokenizer.nextToken()).round(mathContext).doubleValue();
+                    double y = new BigDecimal(stringTokenizer.nextToken()).round(mathContext).doubleValue();
+                    if (stringTokenizer.hasMoreTokens()) {
+                        double z = new BigDecimal(stringTokenizer.nextToken()).round(mathContext).doubleValue();
+                        polygonPointList.add(mkPt(x, y, z));
+                    } else {
+                        polygonPointList.add(mkPt(x, y));
+                    }
+                }
+            }
+        } finally {
+            bufferedReader.close();
+        }
+    }
+
+    private Polygon polygonFromFile(URL file) throws IOException {
+        List<PolygonPoint> outerRing = new ArrayList<PolygonPoint>();
+        List<ArrayList<PolygonPoint>> holes = new ArrayList<ArrayList<PolygonPoint>>();
+        pointsFromFile(file, MathContext.DECIMAL64, outerRing, holes);
+        Polygon polygon = new Polygon(outerRing);
+        for(List<PolygonPoint> hole : holes) {
+            polygon.addHole(new Polygon(hole));
+        }
+        return polygon;
+    }
+
+    /**
+     * Add WKT text of points
+     * @param stringBuilder String to add to
+     * @param pts Input pts
+     */
+    public static void addPts(StringBuilder stringBuilder, Point... pts) {
+        AtomicBoolean first = new AtomicBoolean(true);
+        for(Point pt : pts) {
+            if(!first.getAndSet(false)) {
+                stringBuilder.append(", ");
+            }
+            stringBuilder.append(pt.getX());
+            stringBuilder.append(" ");
+            stringBuilder.append(pt.getY());
+            stringBuilder.append(" ");
+            stringBuilder.append(pt.getZ());
+        }
+    }
+
+    /**
+     * Convert triangles list into wkt form for debugging purpose
+     * @param polygon Polygon
+     * @return String WKT
+     */
+    public static String toWKT(Polygon polygon) {
+        StringBuilder stringBuilder = new StringBuilder("POLYGON((");
+        List<TriangulationPoint> pts = polygon.getPoints();
+        addPts(stringBuilder, pts.toArray(new Point[pts.size()]));
+        // Close linestring
+        stringBuilder.append(", ");
+        addPts(stringBuilder, pts.get(0));
+        stringBuilder.append(")");
+        if(!polygon.getHoles().isEmpty()) {
+            for(Polygon poly : polygon.getHoles()) {
+                stringBuilder.append(", (");
+                List<TriangulationPoint> pts2 = poly.getPoints();
+                addPts(stringBuilder, pts2.toArray(new Point[pts2.size()]));
+                // Close linestring
+                stringBuilder.append(", ");
+                addPts(stringBuilder, pts2.get(0));
+                stringBuilder.append(")");
+            }
+        }
+        stringBuilder.append(")");
+        return stringBuilder.toString();
+    }
+    /**
+     * Convert triangles list into wkt form for debugging purpose
+     * @param triangles Triangle array
+     * @return String WKT
+     */
+    public static String toWKT(List<DelaunayTriangle> triangles) {
+        StringBuilder stringBuilder = new StringBuilder("MULTIPOLYGON(");
+        AtomicBoolean first = new AtomicBoolean(true);
+        for(DelaunayTriangle triangle : triangles) {
+            if(!first.getAndSet(false)) {
+                stringBuilder.append(",");
+            }
+            stringBuilder.append("((");
+            TriangulationPoint[] pts = triangle.points;
+            addPts(stringBuilder, pts);
+            // Close linestring
+            stringBuilder.append(", ");
+            addPts(stringBuilder, pts[0]);
+            stringBuilder.append("))");
+        }
+        stringBuilder.append(")");
+        return stringBuilder.toString();
+    }
+
+    /**
+     * Check for precision issue https://code.google.com/p/poly2tri/issues/detail?id=97
+     * "crash with attached polygon"
+     * Effectively crash with {@link java.math.MathContext#DECIMAL128}. However Poly2Tri is working with double,
+     * then it is ok with double rounding.
+     * @throws IOException
+     */
+    @Test
+    public void testPolygonTessellation() throws IOException {
+        Polygon polygon = polygonFromFile(TestConstrainedDelaunay.class.getResource("poly1.dat"));
+        Poly2Tri.triangulate(polygon);
+        assertEquals(122, polygon.getTriangles().size());
+    }
+
+    /**
+     * Check "Banana" polygon. Polygon with a hole where hole point touch outer ring point.
+     * @throws IOException
+     */
+    @Test
+    public void testPolygonHoleTouchTessellation() throws IOException {
+        Polygon polygon = polygonFromFile(TestConstrainedDelaunay.class.getResource("poly2.dat"));
+        Poly2Tri.triangulate(polygon);
+        //LOGGER.info(toWKT(polygon));
+        //LOGGER.info(toWKT(polygon.getTriangles()));
+        assertEquals(7, polygon.getTriangles().size());
+    }
+
+}
