@@ -12,8 +12,8 @@
     <name>poly2tri</name>
     <version>0.2-SNAPSHOT</version>
     <artifactId>poly2tri</artifactId>
-    <groupId>org.orbisgis</groupId>
-    <packaging>pom</packaging>
+    <packaging>jar</packaging>
+
     <licenses>
         <license>
             <name>New BSD License</name>
@@ -41,37 +41,27 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.build.timestamp.format>YYYY-MM-dd</maven.build.timestamp.format>
         <buildNumber>${maven.build.timestamp}</buildNumber>
-        <!-- Dependencies versions -->
-        <slf4j-version>1.7.30</slf4j-version>
-        <junit-version>5.7.0-M1</junit-version>
     </properties>
 
     <!-- Dependencies -->
-    <dependencyManagement>
     <dependencies>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>${slf4j-version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
-            <version>${slf4j-version}</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>${junit-version}</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
-            <version>${junit-version}</version>
         </dependency>
     </dependencies>
-    </dependencyManagement>
 
     <issueManagement>
         <system>Github</system>
@@ -135,10 +125,13 @@
     </repositories>
 
     <distributionManagement>
-        <site>
-            <id>orbisgis-devs-website</id>
-            <name>Devs Website</name>
-            <url>file:/var/www/html/${project.artifactId}</url>
-        </site>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
     </distributionManagement>
 </project>
