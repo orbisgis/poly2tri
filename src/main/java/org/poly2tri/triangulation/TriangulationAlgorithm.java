@@ -30,7 +30,6 @@
  */
 package org.poly2tri.triangulation;
 
-public enum TriangulationAlgorithm
-{
+public enum TriangulationAlgorithm {
     DTSweep
 }

@@ -34,9 +34,7 @@ import org.poly2tri.triangulation.TriangulationPoint;
 import org.poly2tri.triangulation.delaunay.DelaunayTriangle;
 
 
-
-public class AdvancingFrontNode
-{
+public class AdvancingFrontNode {
     protected AdvancingFrontNode next = null;
     protected AdvancingFrontNode prev = null;
 
@@ -44,41 +42,34 @@ public class AdvancingFrontNode
     protected final double value;
     protected final TriangulationPoint point;
     protected DelaunayTriangle triangle;
-    
-    public AdvancingFrontNode( TriangulationPoint point )
-    {
+
+    public AdvancingFrontNode(TriangulationPoint point) {
         this.point = point;
         value = point.getX();
-        key = Double.valueOf( value ); // XXX: BST
-    }    
+        key = Double.valueOf(value); // XXX: BST
+    }
 
-    public AdvancingFrontNode getNext()
-    {
+    public AdvancingFrontNode getNext() {
         return next;
     }
 
-    public AdvancingFrontNode getPrevious()
-    {
+    public AdvancingFrontNode getPrevious() {
         return prev;
     }
 
-    public TriangulationPoint getPoint()
-    {
+    public TriangulationPoint getPoint() {
         return point;
     }
-    
-    public DelaunayTriangle getTriangle()
-    {
+
+    public DelaunayTriangle getTriangle() {
         return triangle;
     }
 
-    public boolean hasNext()
-    {
+    public boolean hasNext() {
         return next != null;
     }
 
-    public boolean hasPrevious()
-    {
+    public boolean hasPrevious() {
         return prev != null;
-    }    
+    }
 }

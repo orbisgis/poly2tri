@@ -34,21 +34,18 @@ package org.poly2tri.triangulation;
  * Forces a triangle edge between two points p and q
  * when triangulating. For example used to enforce
  * Polygon Edges during a polygon triangulation.
- * 
- * @author Thomas Åhlén, thahlen@gmail.com
+ *
+ * @author Thomas ï¿½hlï¿½n, thahlen@gmail.com
  */
-public class TriangulationConstraint
-{
+public class TriangulationConstraint {
     protected TriangulationPoint p;
     protected TriangulationPoint q;
 
-    public TriangulationPoint getP()
-    {
+    public TriangulationPoint getP() {
         return p;
     }
 
-    public TriangulationPoint getQ()
-    {
+    public TriangulationPoint getQ() {
         return q;
     }
 

@@ -36,44 +36,35 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * 
- * @author Thomas Åhlén, thahlen@gmail.com
- *
+ * @author Thomas ï¿½hlï¿½n, thahlen@gmail.com
  */
-public class DTSweepConstraint extends TriangulationConstraint
-{
-    private final static Logger logger = LoggerFactory.getLogger( DTSweepConstraint.class );
+public class DTSweepConstraint extends TriangulationConstraint {
+    private final static Logger logger = LoggerFactory.getLogger(DTSweepConstraint.class);
 
     public TriangulationPoint p;
     public TriangulationPoint q;
-    
+
     /**
      * Give two points in any order. Will always be ordered so
-     * that q.y > p.y and q.x > p.x if same y value 
-     * 
+     * that q.y > p.y and q.x > p.x if same y value
+     *
      * @param p1
      * @param p2
      */
-    public DTSweepConstraint( TriangulationPoint p1, TriangulationPoint p2 )
+    public DTSweepConstraint(TriangulationPoint p1, TriangulationPoint p2)
 //        throws DuplicatePointException
     {
         p = p1;
         q = p2;
-        if( p1.getY() > p2.getY() )
-        {
+        if (p1.getY() > p2.getY()) {
             q = p1;
             p = p2;
-        }
-        else if( p1.getY() == p2.getY() )
-        {
-            if( p1.getX() > p2.getX() )
-            {
+        } else if (p1.getY() == p2.getY()) {
+            if (p1.getX() > p2.getX()) {
                 q = p1;
                 p = p2;
-            }
-            else if( p1.getX() == p2.getX() )
-            {
-                logger.info( "Failed to create constraint {}={}", p1, p2 );
+            } else if (p1.getX() == p2.getX()) {
+                logger.info("Failed to create constraint {}={}", p1, p2);
 //                throw new DuplicatePointException( p1 + "=" + p2 );
 //                return;
             }
@@ -94,13 +85,11 @@ public class DTSweepConstraint extends TriangulationConstraint
 //        return new TPoint( bax, bay );
 //    }
 
-    public TriangulationPoint getP()
-    {
+    public TriangulationPoint getP() {
         return p;
     }
 
-    public TriangulationPoint getQ()
-    {
+    public TriangulationPoint getQ() {
         return q;
     }
 }

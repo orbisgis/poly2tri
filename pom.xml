@@ -3,11 +3,17 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <!-- The Basics -->
+    <parent>
+        <groupId>org.orbisgis</groupId>
+        <artifactId>orbisparent</artifactId>
+        <version>1.0.4-SNAPSHOT</version>
+    </parent>
     <name>poly2tri</name>
     <version>0.2-SNAPSHOT</version>
     <artifactId>poly2tri</artifactId>
     <groupId>org.orbisgis</groupId>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
     <licenses>
         <license>
             <name>New BSD License</name>
@@ -35,25 +41,13 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.build.timestamp.format>YYYY-MM-dd</maven.build.timestamp.format>
         <buildNumber>${maven.build.timestamp}</buildNumber>
-        <maven.compiler.target>8</maven.compiler.target>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven-version>3.5.0</maven-version>
-        <java-version>1.8</java-version>
-
         <!-- Dependencies versions -->
         <slf4j-version>1.7.30</slf4j-version>
         <junit-version>5.7.0-M1</junit-version>
-
-        <!-- Plugins versions -->
-        <exec-maven-version>3.0.0</exec-maven-version>
-        <maven-compiler-version>3.8.1</maven-compiler-version>
-        <maven-bundle-version>4.2.1</maven-bundle-version>
-        <maven-deploy-version>3.0.0-M1</maven-deploy-version>
-        <maven-install-version>3.0.0-M1</maven-install-version>
-        <maven-jar-version>3.2.0</maven-jar-version>
-        <maven-javadoc-version>3.2.0</maven-javadoc-version>
     </properties>
 
+    <!-- Dependencies -->
+    <dependencyManagement>
     <dependencies>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -77,100 +71,74 @@
             <version>${junit-version}</version>
         </dependency>
     </dependencies>
+    </dependencyManagement>
 
     <issueManagement>
         <system>Github</system>
         <url>https://github.com/orbisgis/poly2tri/issues</url>
     </issueManagement>
 
+    <!-- Build Settings -->
     <build>
-        <sourceDirectory>src/main/java</sourceDirectory>
         <plugins>
-            <!--  http://maven.apache.org/plugins/maven-dependency-plugin/usage.html -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>2.8</version>
-                <executions>
-                    <!-- http://maven.apache.org/plugins/maven-dependency-plugin/unpack-dependencies-mojo.html -->
-                    <!-- unpack all 3dparty classes to one directory -->
-                    <execution>
-                        <id>unpack-dependencies-classes</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>unpack-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.directory}/lib/classes</outputDirectory>
-                            <type>jar</type>
-                        </configuration>
-                    </execution>
-                    <!-- unpack 3dparty sources to one directory -->
-                    <execution>
-                        <id>unpack-dependencies-sources</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>unpack-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <classifier>sources</classifier>
-                            <failOnMissingClassifierArtifact>false</failOnMissingClassifierArtifact>
-                            <outputDirectory>${project.build.directory}/lib/sources</outputDirectory>
-                            <silent>true</silent>
-                            <type>jar</type>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <!--  http://maven.apache.org/plugins/maven-javadoc-plugin/ -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>${maven-javadoc-version}</version>
-                <executions>
-                    <execution>
-                        <id>attach-javadoc</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>maven-bundle-plugin</artifactId>
-                <version>${maven-bundle-version}</version>
-                <extensions>true</extensions>
-                <executions>
-                    <execution>
-                        <id>bundle-manifest</id>
-                        <phase>process-classes</phase>
-                        <goals>
-                            <goal>manifest</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <!-- include extra manifest entries -->
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>${maven-jar-version}</version>
-                <configuration>
-                    <archive>
-                        <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
-                    </archive>
-                </configuration>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven-compiler-version}</version>
-                <configuration>
-                    <source>${maven.compiler.source}</source>
-                    <target>${maven.compiler.target}</target>
-                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
             </plugin>
         </plugins>
     </build>
+    <repositories>
+        <repository>
+            <id>orbisgis-release</id>
+            <url>https://oss.sonatype.org/content/repositories/releases/</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+        <repository>
+            <id>orbisgis-snapshot</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </repository>
+    </repositories>
+
+    <distributionManagement>
+        <site>
+            <id>orbisgis-devs-website</id>
+            <name>Devs Website</name>
+            <url>file:/var/www/html/${project.artifactId}</url>
+        </site>
+    </distributionManagement>
 </project>
