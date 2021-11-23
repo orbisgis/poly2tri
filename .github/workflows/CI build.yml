@@ -29,7 +29,17 @@ jobs:
 
       # Build the project using
       #   - clean : clean up the workspace
-      #   - verify : perform different check like the dependency and plugin version update
-      #   - package : bundle the project into pom or jar.
+      #   - validate : perform different check like the dependency and plugin version update
+      #   - compile : compile the source code.
+      #   - test : Perform the tests.
       - name: Build
-        run: mvn clean validate compile test
+        run: mvn -ntp clean validate compile test
+
+      # Check changelog update
+      - name: Check changelog update
+        run: |
+          if [ -z "$(git diff docs/CHANGELOG.md)" ]; then
+            exit 1
+          else
+            exit 0
+          fi
