@@ -38,8 +38,12 @@ jobs:
       # Check changelog update
       - name: Check changelog update
         run: |
-          if [ -z "$(git diff docs/CHANGELOG.md)" ]; then
-            exit 1
-          else
+          SHA1="$(git log -n1 --format=format:"%H")"
+          SHA2="$(git rev-parse origin/main)"
+          CHANGELOG_FILE="docs/CHANGELOG.md"
+          FILES="$(git diff --name-only "$SHA1" "$SHA2")"
+          if [[ "$FILES" == *"$CHANGELOG_FILE"* ]]; then
             exit 0
+          else
+            exit 1
           fi
