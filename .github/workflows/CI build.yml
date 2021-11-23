@@ -37,13 +37,13 @@ jobs:
 
       # Check changelog update
       - name: Check changelog update
-        run: |
-          SHA1="$(git log -n1 --format=format:"%H")"
-          SHA2="$(echo $(git ls-remote $GITHUB_SERVER_URL"/"$GITHUB_REPOSITORY main) | cut -d " " -f1)"
-          CHANGELOG_FILE="docs/CHANGELOG.md"
-          FILES="$(git diff --name-only "$SHA1" "$SHA2")"
-          if [[ "$FILES" == *"$CHANGELOG_FILE"* ]]; then
-            exit 0
-          else
-            exit 1
-          fi
+        uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: |
+            changelog:
+              - 'docs/CHANGELOG.md'
+        if: github.event_name != 'workflow_dispatch'
+
+      - if: steps.changes.outputs.changelog == 'false' && github.event_name != 'workflow_dispatch'
+        run: exit 1
