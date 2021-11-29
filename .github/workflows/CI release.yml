@@ -3,7 +3,7 @@ name: CI release
 on:
   workflow_dispatch:
     inputs:
-      next-version:
+      nextVersion:
         required: false
         description: "Next version"
 
