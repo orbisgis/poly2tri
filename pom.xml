@@ -36,6 +36,14 @@
         </developer>
     </developers>
 
+    <scm>
+        <connection>scm:git:https://github.com/orbisgis/poly2tri.git</connection>
+        <developerConnection>scm:git:https://github.com/orbisgis/poly2tri.git</developerConnection>
+        <url>git@github.com:orbisgis/poly2tri.git</url>
+        <tag>HEAD</tag>
+    </scm>
+
+
     <!-- Properties -->
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
