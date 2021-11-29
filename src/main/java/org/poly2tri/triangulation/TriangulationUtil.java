@@ -139,7 +139,7 @@ public class TriangulationUtil {
      * @param pc
      * @param pd
      * @return
-     * {@see #smartIncircle(TriangulationPoint, TriangulationPoint, TriangulationPoint, TriangulationPoint)}
+     * @see #smartIncircle(TriangulationPoint, TriangulationPoint, TriangulationPoint, TriangulationPoint)
      */
     public static boolean inScanArea(final TriangulationPoint pa,
                                      final TriangulationPoint pb,
