@@ -103,7 +103,6 @@ public class TriangulationProcess implements Runnable {
     /**
      * Uses SweepLine algorithm by default
      *
-     * @param algorithm
      */
     public TriangulationProcess() {
         this(TriangulationAlgorithm.DTSweep);
@@ -128,7 +127,7 @@ public class TriangulationProcess implements Runnable {
     /**
      * Triangulate a PointSet with eventual constraints
      *
-     * @param cps
+     * @param ps
      */
     public void triangulate(PointSet ps) {
         _triangulations.clear();
@@ -161,7 +160,7 @@ public class TriangulationProcess implements Runnable {
     /**
      * Triangulate a Polygon
      *
-     * @param ps
+     * @param polygon
      */
     public void triangulate(Polygon polygon) {
         _triangulations.clear();
@@ -172,7 +171,7 @@ public class TriangulationProcess implements Runnable {
     /**
      * Triangulate a List of Triangulatables
      *
-     * @param ps
+     * @param list
      */
     public void triangulate(List<Triangulatable> list) {
         _triangulations.clear();

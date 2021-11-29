@@ -391,7 +391,6 @@ public class DelaunayTriangle {
     /**
      * Get the neighbor that share this edge
      *
-     * @param constrainedEdge
      * @return index of the shared edge or -1 if edge isn't shared
      */
     public int edgeIndex(TriangulationPoint p1, TriangulationPoint p2) {

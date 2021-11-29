@@ -85,10 +85,10 @@ public class TriangulationUtil {
      * d is outside B if orient2d(a,b,d) or orient2d(c,a,d) is CW<br>
      * This preknowledge gives us a way to optimize the incircle test
      *
-     * @param a - triangle point, opposite d
-     * @param b - triangle point
-     * @param c - triangle point
-     * @param d - point opposite a
+     * @param pa - triangle point, opposite d
+     * @param pb - triangle point
+     * @param pc - triangle point
+     * @param pd - point opposite a
      * @return true if d is inside circle, false if on circle edge
      */
     public static boolean smartIncircle(final TriangulationPoint pa,
@@ -139,7 +139,7 @@ public class TriangulationUtil {
      * @param pc
      * @param pd
      * @return
-     * @see smartIncircle
+     * {@see #smartIncircle(TriangulationPoint, TriangulationPoint, TriangulationPoint, TriangulationPoint)}
      */
     public static boolean inScanArea(final TriangulationPoint pa,
                                      final TriangulationPoint pb,

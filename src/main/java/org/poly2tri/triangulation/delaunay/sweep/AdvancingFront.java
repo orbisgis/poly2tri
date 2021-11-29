@@ -77,7 +77,6 @@ public class AdvancingFront {
      * We use a balancing tree to locate a node smaller or equal to
      * given key value
      *
-     * @param x
      * @return
      */
     public AdvancingFrontNode locateNode(TriangulationPoint point) {
