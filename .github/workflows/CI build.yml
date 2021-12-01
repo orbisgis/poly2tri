@@ -33,7 +33,7 @@ jobs:
       #   - compile : compile the source code.
       #   - test : Perform the tests.
       - name: Build
-        run: mvn -ntp clean validate compile test
+        run: mvn -ntp clean validate compile test javadoc:test-javadoc
 
       # Check changelog update
       - name: Check changelog update
