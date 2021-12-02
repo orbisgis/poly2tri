@@ -20,12 +20,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      # Setup the jdk using version 8 of adoptOpenJDK
-      - name: Setup java 8 using adoptOpenJDK
+      # Setup the jdk using version 11 of adoptOpenJDK
+      - name: Setup java 11 using adoptOpenJDK
         uses: actions/setup-java@v2
         with:
           distribution: adopt
-          java-version: 8
+          java-version: 11
 
       # Build the project using
       #   - clean : clean up the workspace
@@ -33,7 +33,7 @@ jobs:
       #   - compile : compile the source code.
       #   - test : Perform the tests.
       - name: Build
-        run: mvn -ntp clean validate compile test
+        run: mvn -ntp clean validate compile test javadoc:test-javadoc
 
       # Check changelog update
       - name: Check changelog update
