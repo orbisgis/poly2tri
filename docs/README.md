@@ -41,3 +41,28 @@ public class Main {
   }
 }
 ```
+
+
+#### Declaring project dependency
+
+You can include Poly2Tri in your project thanks to Sonatype repository.
+
+To use the current snapshot add in the pom
+
+```xml
+<repository>
+  <id>orbisgis-snapshot</id>
+  <name>OrbisGIS sonatype snapshot repository</name>
+  <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+</repository>
+```
+
+and the following dependency
+
+```xml
+<dependency>
+    <groupId>org.orbisgis</groupId>
+    <artifactId>poly2tri</artifactId>   
+    <version>0.4.0-SNAPSHOT</version>
+</dependency>
+```
