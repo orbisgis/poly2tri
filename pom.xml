@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.orbisgis</groupId>
-    <version>0.6.0</version>
+    <version>0.6.1-SNAPSHOT</version>
     <artifactId>poly2tri</artifactId>
     <packaging>jar</packaging>
 
