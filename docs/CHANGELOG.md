@@ -1,1 +1,1 @@
-## Changelog for v0.7.0
+## Changelog for v0.7.1
