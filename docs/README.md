@@ -63,6 +63,6 @@ and the following dependency
 <dependency>
     <groupId>org.orbisgis</groupId>
     <artifactId>poly2tri</artifactId>   
-    <version>0.4.0-SNAPSHOT</version>
+    <version>0.7.1-SNAPSHOT</version>
 </dependency>
 ```
